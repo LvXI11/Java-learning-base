@@ -1,4 +1,18 @@
 public class Student_Test {
+    static void change1(Student x){
+        x.setName("haha");
+    }
+
+    static void change2(Student x){
+        x = new Student();
+        x.setName("666");
+        System.out.println(x.name);
+    }
+
+    static void modify(int x) {x = 999;}
+    static void modfiyStudent(Student s) {s.setName("Bob");}
+    static void reassign(Student s) {s = new Student(); s.setName("Mary");}
+
     public static void main(String[] args) {
 
         Student s1 = new Student();
@@ -6,11 +20,24 @@ public class Student_Test {
         Student s3 = new Student();
 
         s1.setName("张三"); s1.age=12; s1.score=62.2;
-        s2.setName("李四"); s2.age=12; s2.score=61.5;
-        s3.setName("王五"); s3.age=11; s3.score=90;
-
+        s2.setName("李四"); s2.age=18; s2.score=61.5;
+        s3.setName("王五"); s3.age=101; s3.score=90;
         s1.printInfo();
         s2.printInfo();
         s3.printInfo();
+        System.out.println("------------------");
+        change1(s1);
+        s1.printInfo();
+        change2(s1);
+        s1.printInfo();
+        System.out.println("---------------------");
+        int x=0;
+        System.out.println("x="+x);
+        modify(x);
+        System.out.println("x="+x);
+        modfiyStudent(s3);
+        s3.printInfo();
+        reassign(s2);
+        s2.printInfo();
     }
 }
