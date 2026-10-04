@@ -1,12 +1,21 @@
+
+
 public class StudentManager {
+
     private Student students[] = new Student[5];
     private int count = 0;
 
+    public Student buildStudent(String name,int age,double score){
+        if(count == students.length) return null;
+        Student newstu = new Student();
+        newstu.setName(name);
+        newstu.setAge(age);
+        newstu.setScore(score);
+        return newstu;
+    }
     public void addStudent(Student s){
-        if(count < students.length){
             students[count++] = s;
-        }
-        else System.out.println("成员已满，不可添加");
+            System.out.println("添加成功");
     }
     public Student findByName(String name){
         for (int i = 0; i < count; i++) {
@@ -38,12 +47,16 @@ public class StudentManager {
     }
     public double AverageScore(){
         if(count == 0) return 0;
+       return TotaleScore()/count;
+    }
+    public double TotaleScore(){
+        if(count == 0) return 0;
         else{
             double total = 0;
             for (int i = 0; i < count; i++) {
                 total += students[i].getScore();
             }
-            return total/count;
+            return total;
         }
     }
     public void topStudet(){
@@ -66,5 +79,9 @@ public class StudentManager {
                 }
             }
         }
+    }
+    public boolean isFull(){
+        if(count == students.length) return true;
+        else return false;
     }
 }
