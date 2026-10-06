@@ -2,9 +2,6 @@ public class Student extends Person{
     private String school;
     private String major;
 
-    public Student(){
-    }
-
     public Student(String name,int age,String school,String major){
         super(name,age);
         this.school = school;
