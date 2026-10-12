@@ -26,26 +26,17 @@ public class Menu {
                     System.out.print("请输入姓名：");
                     String name1 = scanner.next();
                     System.out.println();
-                    String phoneNumber = null;
+                    Contact contact = new Contact(name1, null);
                     while (true){
-                        boolean inputSucceed = true;
+                        boolean inputCorrect = false;
                         System.out.print("请输入电话号码：");
-                        phoneNumber = scanner.next();
-                        for (int i = 0; i < phoneNumber.length(); i++) {
-                            if(phoneNumber.length() > 11){
-                                System.out.println("号码的位数不对(应小于等于11位)");
-                                inputSucceed = false;
-                                break;
-                            }
-                            if(!Character.isDigit(phoneNumber.charAt(i))){
-                                System.out.println("号码只能为数字！");
-                                inputSucceed = false;
-                                break;
-                            }
+                        if(contact.setPhoneNumber(scanner.next())){
+                            inputCorrect = true;
+                        }else{
+                            System.out.println("电话号码格式不对");
                         }
-                        if(inputSucceed) break;
+                        if(inputCorrect) break;
                     }
-                    Contact contact = new Contact(name1, phoneNumber);
                     System.out.println("(可选)添加邮箱(是/否):");
                     String selection = null;
                     while(true){
