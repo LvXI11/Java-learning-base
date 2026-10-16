@@ -13,21 +13,21 @@ public class Main {
             System.out.println("5. 统计（总分 / 平均分 / 最高分）");
             System.out.println("6. 按分数降序排序");
             System.out.println("0. 退出");
-            System.out.print("请选择：");
-            int choice = scanner.nextInt();
             String name;
             int age;
             double score;
+
+            int choice = InputUtil.readInt(scanner, "请选择功能：");
             switch (choice){
                 case 1:
                     if(test.isFull()){
                         System.out.println("成员已满，不可添加");
                         break;
                     }
-                    System.out.println("请分别输入：姓名 年龄 成绩");
+                    System.out.print("请输入姓名：");
                     name = scanner.next();
-                    age = scanner.nextInt();
-                    score = scanner.nextDouble();
+                    age = InputUtil.readInt(scanner, "请输入年龄：");
+                    score = InputUtil.readDouble(scanner, "请输入成绩：");
                     test.addStudent(test.buildStudent(name,age,score));
                     break;
                 case 2:

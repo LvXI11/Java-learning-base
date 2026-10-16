@@ -3,9 +3,8 @@ public class Contact {
     private String phoneNumber;
     private String email;
 
-    public Contact(String name, String phoneNumber) {
+    public Contact(String name) {
         this.name = name;
-        this.setPhoneNumber(phoneNumber);
     }
 
     public String getName() {
@@ -21,7 +20,7 @@ public class Contact {
     }
 
     public boolean setPhoneNumber(String phoneNumber) {
-
+        if(phoneNumber == null) return false;
         if(phoneNumber.length() > 11){
             System.out.println("号码的位数不对(应小于等于11位)");
             return false;
