@@ -5,8 +5,8 @@ public class BookkeepingSoftware {
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
         ArrayList<Record> records = new ArrayList<>();
-        boolean con=true;
-        while (con){
+        boolean running=true;
+        while (running){
             System.out.println("\n=== 个人记账本 ===");
             System.out.print("     1. 记账\n");
             System.out.print("     2. 查看账单\n");
@@ -54,11 +54,12 @@ public class BookkeepingSoftware {
                             income,expense,income-expense);
                     break;
                 case 4:
-                    con=false;
+                    running=false;
                     System.out.println("已退出\n");break;
                 default:
                     System.out.println("输入错误，请重写输入：");
             }
         }
+        sc.close();
     }
 }
