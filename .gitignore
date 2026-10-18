@@ -3,3 +3,7 @@
 out/
 target/*.class
 /Junit/
+
+# IDEA 每个新项目会自动生成 .gitignore，只保留根目录这一个
+**/.gitignore
+!/.gitignore
