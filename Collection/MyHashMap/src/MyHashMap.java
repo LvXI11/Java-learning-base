@@ -21,8 +21,26 @@ public class MyHashMap {
         int h = key.hashCode();
         return (h % table.length + table.length) % table.length;
     }
+    private Node[] extendCapacity() {
+        Node[] newTable = new Node[table.length * 2];
+        for(int i = 0;i < table.length; i++) {
+            Node curr = table[i];
+            while(curr != null) {
+                int index = (curr.key.hashCode() % newTable.length
+                        + newTable.length) % newTable.length;
+                Node next = curr.next;
+                curr.next = newTable[index];
+                newTable[index] = curr;
+                curr = next;
+            }
+        }
+        return newTable;
+    }
 
     public void put(Object key, Object value) {
+        if(size > table.length * 3 / 4) {
+            table = extendCapacity();
+        }
         int index = hash(key);
         Node curr = table[index];
         while(curr != null) {
@@ -84,35 +102,32 @@ public class MyHashMap {
         return null;
     }
 
-
-    public String toStirng() {
-        int count = 0;
+    @Override
+    public String toString() {
+        boolean empty = true;
         for(int i = 0;i < table.length; i++) {
-            Node curr = table[i];
-            while (curr != null) {
-                count++;
-                curr = curr.next;
-            }
+           if(table[i] != null) {
+               empty = false;
+           }
         }
-
-        if(count == 0) {
+        if(empty) {
             return "{}";
         }
 
         String s = "{";
-        for (int i = 0; i < table.length && count > 0; i++) {
+        boolean first = true;
+        for (int i = 0; i < table.length; i++) {
             Node curr = table[i];
-
             while(curr != null) {
-              s = s + curr.key + "=" + curr.value + ",";
-              curr = curr.next;
-              count--;
-              if(count == 1 && curr != null) {
-                  s = s + curr.key + "=" + curr.value;
-                  count--;
+              if(!first) {
+                  s += ",";
               }
+              s += curr.key + "=" + curr.value;
+              first = false;
+              curr = curr.next;
              }
         }
-        return s;
+        return s + "}";
     }
+
 }
