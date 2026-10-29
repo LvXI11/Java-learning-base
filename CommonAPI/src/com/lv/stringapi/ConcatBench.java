@@ -9,7 +9,7 @@ public class ConcatBench {
         }
         long end = System.nanoTime();
         System.out.println("String 花费时间=" +
-                String.format("%.1f", Double.valueOf((end - start)) / 1e6) +
+                String.format("%.1f", ((end - start)) / 1e6) +
                 " len=" + str.length());
         return str;
     }
@@ -22,7 +22,7 @@ public class ConcatBench {
         }
         double end = System.nanoTime();
         System.out.println("StringBuilder 花费时间=" +
-                String.format("%.1f", Double.valueOf(((double)end - start)) / 1e6) +
+                String.format("%.1f", (end - start) / 1e6) +
                 " len=" + str.length());
         return str;
     }
@@ -35,7 +35,7 @@ public class ConcatBench {
         }
         double end = System.nanoTime();
         System.out.println("StringBuffer 花费时间=" +
-                String.format("%.1f", Double.valueOf((end - start)) / 1e6) +
+                String.format("%.1f", (end - start) / 1e6) +
                 " len=" + str.length());
         return str;
     }
