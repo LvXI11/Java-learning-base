@@ -2,64 +2,56 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InputUtility {
-    static int getInt(String stdin) {
-        Scanner scanner = new Scanner(System.in);
-        int number;
-        while(true) {
-            System.out.print(stdin);
+    private static final Scanner SCANNER = new Scanner(System.in);
+
+    private InputUtility() { }          // 工具类，不许 new
+
+    static int getInt(String tip) {
+        while (true) {
+            System.out.print(tip);
             try {
-                number = Integer.parseInt(scanner.next());
-                break;
+                return Integer.parseInt(SCANNER.next());
             } catch (NumberFormatException e) {
                 System.out.println("输入错误（请输入整数）");
-                scanner.nextLine();
+                SCANNER.nextLine();
             }
         }
-        return number;
     }
 
-    static double getDouble(String stdin) {
-        Scanner scanner = new Scanner(System.in);
-        double number;
-        while(true) {
-            System.out.println(stdin);
+    static long getLong(String tip) {
+        while (true) {
+            System.out.print(tip);
             try {
-                number = Double.parseDouble(scanner.next());
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("输入错误（请输入数字)");
-                scanner.nextLine();
-            }
-        }
-        return number;
-    }
-
-    static long getLong(String stdin) {
-        Scanner scanner = new Scanner(System.in);
-        long number;
-        while(true) {
-            System.out.print(stdin);
-            try {
-                number = Long.parseLong(scanner.next());
-                break;
+                return Long.parseLong(SCANNER.next());
             } catch (NumberFormatException e) {
                 System.out.println("输入错误（请输入整数）");
-                scanner.nextLine();
+                SCANNER.nextLine();
             }
         }
-        return number;
     }
 
-    static Customer inputName(List<Customer> customers) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("请输入姓名:");
-        Customer customer = null;
-        for(Customer c : customers) {
-            if(c.getName().equals(scanner.next())) {
-                customer = c;
-                break;
+    static double getDouble(String tip) {
+        while (true) {
+            System.out.print(tip);
+            try {
+                return Double.parseDouble(SCANNER.next());
+            } catch (NumberFormatException e) {
+                System.out.println("输入错误（请输入数字）");
+                SCANNER.nextLine();
             }
         }
-        return customer;
+    }
+
+    static String getString(String tip) {
+        System.out.print(tip);
+        return SCANNER.next();
+    }
+
+    /** 按姓名找客户，找不到返回 null */
+    static Customer findCustomer(List<Customer> customers, String name) {
+        for (Customer c : customers) {
+            if (c.getName().equals(name)) return c;
+        }
+        return null;
     }
 }

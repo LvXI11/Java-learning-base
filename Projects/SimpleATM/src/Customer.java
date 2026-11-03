@@ -1,15 +1,16 @@
-import java.text.Format;
-import java.text.Normalizer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class Customer {
     private String name;
     private List<Account> accounts;
-    private  int allNum;
+    private int allNum;              // 已开户数量（账户序号）
 
     public Customer(String name) {
         this.name = name;
-        accounts = new ArrayList<>();
+        this.accounts = new ArrayList<>();
     }
 
     public String getName() {
@@ -20,140 +21,126 @@ public class Customer {
         this.name = name;
     }
 
-    public  int getAllNum() {
+    public int getAllNum() {
         return allNum;
-    }
-
-    public  void setAllNum(int allNum) {
-        this.allNum = allNum;
     }
 
     public List<Account> getAccounts() {
         return accounts;
     }
 
-    public Account searchAccount(long id) {
-        Iterator<Account> iterator = accounts.iterator();
-        Account account = null;
-        while(iterator.hasNext()) {
-            if((account = iterator.next()).getId() == id) {
-                break;
-            }
-        }
-        return account;
-    }
+    // ================= 业务方法（方法名沿用你原来的）=================
 
+    /** 开新账户：成功返回卡号，密码不合法返回 -1 */
     public long buildAccount(String password) {
-        for (int i = 0; i < password.length(); i++) {
-            if(!Character.isLetterOrDigit(password.charAt(i))) {
-                System.out.println("密码格式不对，应是（字母+ 数字）");
-                return -1;
-            }
-        }
+        if (!validPassword(password)) return -1;
+
         Random random = new Random();
-        long value = random.nextLong(10000000000L, 99999999999L);
-        accounts.add(new Account(name, value, password, 0 , ++allNum));
-        return value;
+        long cardId;
+        do {
+            cardId = random.nextLong(10000000000L, 99999999999L);
+        } while (searchAccount(cardId) != null);          // 卡号查重
+
+        accounts.add(new Account(name, cardId, password, 0, ++allNum));
+        return cardId;
     }
 
-    public boolean findAllAccounts() {
-        System.out.println(name + "名下所以账户:");
-        boolean hasAccount = false;
-        for(Account account : accounts) {
-            hasAccount = true;
-            System.out.println(account);
+    /** 按卡号找账户：找不到返回 null（★ 修掉原来"返回最后一个元素"的 bug） */
+    public Account searchAccount(long id) {
+        for (Account a : accounts) {
+            if (a.getId() == id) return a;
         }
-        return hasAccount;
+        return null;
     }
+
+    /** 打印名下所有账户；有账户返回 true */
+    public boolean findAllAccounts() {
+        if (accounts.isEmpty()) return false;
+        System.out.println(name + " 名下所有账户：");
+        for (Account a : accounts) {
+            System.out.println(a);
+        }
+        return true;
+    }
+
+    /** 取款：成功 true（失败原因由 Menu 层提示） */
     public boolean takeMoney(long id, double num) {
         Account account = searchAccount(id);
-        if(account == null) {
-            System.out.println("未找到账户");
-            return false;
-        }
-        if(num > account.getMoney()) {
-            System.out.println("余额不足");
-            return false;
-        }
+        if (account == null) return false;
+        if (num <= 0) return false;
+        if (account.getMoney() < num) return false;
 
         account.setMoney(account.getMoney() - num);
         return true;
     }
 
+    /** 存款：返回存入金额；账户不存在或选项错误返回 -1 */
     public int saveMoney(long id, int choice) {
         Account account = searchAccount(id);
-        int addMoney = 0;
+        if (account == null) return -1;
+
+        int addMoney;
         switch (choice) {
-            case 1: addMoney = 100;break;
-            case 2: addMoney = 200;break;
-            case 3: addMoney = 500;break;
-            case 4: addMoney = 1000;break;
-            case 5: addMoney = 2000;break;
-            case 6: addMoney = 5000;break;
-            case 7: addMoney = 10000;break;
-            default:
-                System.out.println("选择错误");
-                return -1;
+            case 1: addMoney = 100;   break;
+            case 2: addMoney = 200;   break;
+            case 3: addMoney = 500;   break;
+            case 4: addMoney = 1000;  break;
+            case 5: addMoney = 2000;  break;
+            case 6: addMoney = 5000;  break;
+            case 7: addMoney = 10000; break;
+            default: return -1;
         }
+
         account.setMoney(account.getMoney() + addMoney);
         return addMoney;
     }
 
+    /** 查余额：密码正确则打印账户信息并返回 true */
     public boolean search(long id, String password) {
         Account account = searchAccount(id);
-        if(account == null) {
-            System.out.println("未找到账户");
-            return false;
-        }
-        for (int i = 0; i < password.length(); i++) {
-            if(!Character.isLetterOrDigit(password.charAt(i))) {
-                System.out.println("密码格式不对，应是（字母+ 数字）");
-                return false;
-            }
-        }
-        if(password.equals(account.getPassword())) {
-            System.out.println("所属银行: " + account.getName());
-            System.out.println("用户姓名: " + name);
-            System.out.println("用户账户: " + account.getId());
-            System.out.println("用户余额: " + account.getMoney());
-            return true;
-        } else {
-            System.out.println("密码错误");
-        }
-        return false;
+        if (account == null) return false;
+        if (!password.equals(account.getPassword())) return false;
+
+        System.out.println("所属银行: " + account.getName());
+        System.out.println("用户姓名: " + name);
+        System.out.println("用户账户: " + account.getId());
+        System.out.println("用户余额: " + account.getMoney());
+        return true;
     }
 
+    /** 改密码：账户存在且新密码合法返回 true（旧密码校验在 Menu 层做） */
     public boolean changePassword(long id, String password) {
         Account account = searchAccount(id);
-        if(account == null) {
-            System.out.println("未找到账户");
-            return false;
-        }
-        for (int i = 0; i < password.length(); i++) {
-            if(!Character.isLetterOrDigit(password.charAt(i))) {
-                System.out.println("密码格式不对，应是（字母+ 数字）");
-                return false;
-            }
-        }
+        if (account == null) return false;
+        if (!validPassword(password)) return false;
+
         account.setPassword(password);
         return true;
     }
 
-    //计算所以账户的总余额
+    /** 所有账户余额合计 */
     public double sum() {
-        Iterator<Account> iterator = accounts.iterator();
         double sum = 0;
-        while(iterator.hasNext()) {
-            sum += iterator.next().getMoney();
+        for (Account a : accounts) {
+            sum += a.getMoney();
         }
         return sum;
     }
 
-    //按余额由多到少的顺序依次打印出来
+    /** 按余额由多到少打印（Account.compareTo 已是降序） */
     public void sort() {
         Collections.sort(accounts);
-        for(Account account : accounts) {
-            System.out.println(account);
+        for (Account a : accounts) {
+            System.out.println(a);
         }
+    }
+
+    /** 密码规则：非空，且只含字母数字（原来抄了 3 遍，抽成一个方法） */
+    private boolean validPassword(String password) {
+        if (password == null || password.isEmpty()) return false;
+        for (int i = 0; i < password.length(); i++) {
+            if (!Character.isLetterOrDigit(password.charAt(i))) return false;
+        }
+        return true;
     }
 }
