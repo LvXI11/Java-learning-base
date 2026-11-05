@@ -1,4 +1,4 @@
-package com.lv.fileapi;
+package com.lv.api.fileclass;
 
 import java.io.File;
 import java.io.IOException;
