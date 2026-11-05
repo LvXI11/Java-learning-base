@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Account implements Comparable<Account>{
+public class Account implements Comparable<Account> , Serializable {
+    private static final long serialVersionUID = 33323733332L;
     private String name;
     private long id;
     private double money;

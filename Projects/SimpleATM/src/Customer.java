@@ -1,9 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class Customer {
+public class Customer implements Serializable {
+    private static final long serialVersionUID = 13333333333332L;
     private String name;
     private List<Account> accounts;
     private int allNum;              // 已开户数量（账户序号）

@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Menu {
     public static void main(String[] args) {
-        List<Customer> customers = new ArrayList<>();
+        List<Customer> customers = DataStore.load();
         System.out.println("----- 建设银行 -----");
 
         while (true) {
@@ -18,9 +18,10 @@ public class Menu {
             Customer current = InputUtility.findCustomer(customers, name);
             if (current == null) {
                 System.out.println("你还未在本行记录个人信息");
-                if (InputUtility.getInt("0.注册  1.不注册: ") != 0) continue;
+                if (InputUtility.getInt("0.注册  1.不注册: ") == 1) continue;
                 current = new Customer(InputUtility.getString("请输入姓名: "));
                 customers.add(current);
+                DataStore.save(customers);
                 System.out.println("注册成功，欢迎 " + current.getName());
             }
 
@@ -29,13 +30,13 @@ public class Menu {
             while (!logout) {
                 printMenu();
                 switch (InputUtility.getInt("请选择功能: ")) {
-                    case 1:  openAccount(current);    break;
+                    case 1:  openAccount(current);    DataStore.save(customers); break;
                     case 2:  listAccounts(current);   break;
-                    case 3:  saveMoney(current);      break;
-                    case 4:  takeMoney(current);      break;
+                    case 3:  saveMoney(current);      DataStore.save(customers); break;
+                    case 4:  takeMoney(current);      DataStore.save(customers); break;
                     case 5:  queryBalance(current);   break;
                     case 6:  totalBalance(current);   break;
-                    case 7:  changePassword(current); break;
+                    case 7:  changePassword(current); DataStore.save(customers); break;
                     case 0:  logout = true;           break;
                     default: System.out.println("输入错误，请重新选择");
                 }
