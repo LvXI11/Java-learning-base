@@ -7,7 +7,7 @@ import java.util.Random;
 public class Customer implements Serializable {
     private static final long serialVersionUID = 13333333333332L;
     private String name;
-    private List<Account> accounts;
+    private ArrayList<Account> accounts;
     private int allNum;              // 已开户数量（账户序号）
 
     public Customer(String name) {
